@@ -4,7 +4,7 @@ debug: main.cpp logic.cpp
 	g++ -g main.cpp logic.cpp -o main.debug
 
 build: main.o logic.o
-	g++ main.o logic.o -o result.out
+	g++ main.o logic.o -o game-life -lsfml-graphics -lsfml-window -lsfml-system
 
 rebuild: clean build
 
@@ -15,7 +15,7 @@ main.o: main.cpp logic.hpp
 	g++ -c main.cpp
 
 print:
-	./result.out
+	./game-life
 
 clean:
-	rm -r *.out *.debug*
+	rm -r .debug* game-life

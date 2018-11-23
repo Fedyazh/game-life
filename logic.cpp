@@ -67,8 +67,3 @@ int convertCoordinate(const int &coordinate, const int &maxLimit)
     else
         return coordinate;   
 }
-
-
-
-
-
