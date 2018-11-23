@@ -20,7 +20,7 @@ void drawGrid(sf::RenderWindow &window, int worldSize)
     {
         sf::Vertex verticalLines[]{
             sf::Vertex(sf::Vector2f(window.getSize().x / (numberLines + 1) * (i + 1), 0), sf::Color(100, 100, 100)),
-            sf::Vertex(sf::Vector2f(window.getSize().x / (numberLines + 1) * (i + 1), window.getSize().y), sf::Color(100, 100, 100))};
+            sf::Vertex(sf::Vector2f(window.getSize().x / (numberLines + 1) * (i + 1), window.getSize().y - 40), sf::Color(100, 100, 100))};
 
         window.draw(verticalLines, 2, sf::Lines);
 
@@ -37,25 +37,27 @@ int main()
 
     std::vector<std::vector<bool>> world = createworld(WORLDSIZE);
     std::vector<std::vector<bool>> nextWorld = world;
-    
+
     //random seed
     for (int i = 0; i < WORLDSIZE; i++)
     {
         for (int j = 0; j < WORLDSIZE; j++)
         {
-            double d = (double)(std::rand())/RAND_MAX;
-            if (d >=0.6)
+            double d = (double)(std::rand()) / RAND_MAX;
+            if (d >= 0.6)
                 world[i][j] = true;
             else
                 world[i][j] = false;
         }
     }
 
-    sf::RenderWindow window(sf::VideoMode(800, 800), "game-life", sf::Style::Titlebar | sf::Style::Close);
-
+    sf::RenderWindow window(sf::VideoMode(800, 840), "game-life", sf::Style::Titlebar | sf::Style::Close);
+    int countGeneration(0);
     while (window.isOpen())
     {
+        int Population(0);
         sf::Event event;
+        countGeneration++;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
@@ -63,17 +65,41 @@ int main()
         }
         window.clear();
         drawGrid(window, WORLDSIZE - 1);
+        sf::Vertex line[] = {
+            sf::Vertex(sf::Vector2f(0, 800), sf::Color(100, 100, 100)),
+            sf::Vertex(sf::Vector2f(800, 800), sf::Color(100, 100, 100))};
+        window.draw(line, 2, sf::Lines);
+        sf::Font font;
+        font.loadFromFile("arial.ttf");
+
+        sf::Text textGeneranion;
+        textGeneranion.setFillColor(sf::Color::White);
+        textGeneranion.setFont(font);
+        textGeneranion.setPosition(sf::Vector2f(0, 800));
+        textGeneranion.setString("Generation: " + std::to_string(countGeneration));
+        window.draw(textGeneranion);
+
         std::vector<std::vector<bool>> nextWorld = nextGen(world);
         for (int i = 0; i < WORLDSIZE; i++)
         {
             for (int j = 0; j < WORLDSIZE; j++)
             {
                 if (world[i][j])
+                {
                     window.draw(rectangle(i, j));
+                    Population++;
+                }
             }
         }
         world = nextWorld;
-        usleep(100100);
+
+        sf::Text textLiveCell;
+        textLiveCell.setFillColor(sf::Color::White);
+        textLiveCell.setFont(font);
+        textLiveCell.setPosition(sf::Vector2f(400, 800));
+        textLiveCell.setString("Population: " + std::to_string(Population));
+        window.draw(textLiveCell);
+        usleep(50000);
         window.display();
     }
     return 0;

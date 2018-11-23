@@ -4,7 +4,7 @@ debug: main.cpp logic.cpp
 	g++ -g main.cpp logic.cpp -o main.debug
 
 build: main.o logic.o
-	g++ main.o logic.o -o game-life -lsfml-graphics -lsfml-window -lsfml-system
+	g++ main.o logic.o -o game-life -lsfml-graphics -lsfml-window -lsfml-system -std=c++11
 
 rebuild: clean build
 
